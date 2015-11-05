@@ -20,15 +20,16 @@
 function goTo()
 {
 	var host = document.forms[0].host.value;
-	window.location = '/viz/'+host+'/graph';
+	var port = document.forms[0].port.value;
+	window.location = '/viz/'+host+'/'+port+'/graph';
 	return false;
 }
 </script>
 <h2 class=title>Graph Security Information</h2>
 <table>
 <form action="" method="get" onsubmit="return goTo()">
-<tr><td> </td><td>
-<input name="host" id="autocomplete" /></td></tr>
+<tr><td>Host:</td><td> <input name="host" id="autocomplete" /></td></tr>
+<tr><td>Port:</td><td><input name="port" id="port" value="all" /></td></tr>
 <tr><td colspan="2"><input type="submit" value="Submit"></td></tr>
 </form>
 

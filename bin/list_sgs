@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require File.join(File.dirname(__FILE__), '..', "conf", "environment")
+
+require 'secviz'
+
+q=Secviz::Cache.new
+
+q.load_groups.each { |group| puts "#{group.id} #{group.name}" }

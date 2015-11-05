@@ -19,8 +19,12 @@ circle {
 <body>
 <script>
 
-var width = 960,
-    height = 500
+function click(d) {
+  alert("TODO: filter from here");
+}
+
+var width = 1400,
+    height = 1400
 
 var color = d3.scale.category20();
 
@@ -29,11 +33,10 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 var force = d3.layout.force()
-    .distance(80)
-    .charge(-300)
+    .charge(-2000)
     .size([width, height]);
 
-    d3.json("/viz/open_ports_data/<%= hostname %>/list", function(json) {
+    d3.json("/viz/open_ports_data/<%= hostname %>/<%= port %>/list", function(json) {
   force
       .nodes(json.nodes)
       .links(json.links)
@@ -55,6 +58,7 @@ var force = d3.layout.force()
   node.append("circle")
       .attr("r", 5)
       .style("fill", function(d) { return color(d.group); })
+      .on("click", click)
       .call(force.drag);
 
   node.append("text")

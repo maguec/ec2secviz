@@ -10,17 +10,22 @@ class Viz < Sinatra::Base
   set :views, File.join(File.dirname(__FILE__), '..', '/views')
 
 
-  get '/:hostname/graph' do
+  get '/:hostname/:port/graph' do
     respond_to do |wants|
       wants.html {  erb :graph_example,
-        :locals => { :hostname => params[:hostname]},
+        :locals => { :hostname => params[:hostname],
+                     :port => params[:port]},
         :layout => :base_layout }
     end
   end
 
-  get '/open_ports_data/:hostname/list' do
+  get '/open_ports_data/:hostname/:port/list' do
+    port_filter=[]
     q=Secviz::Portsearch.new
-    q.ports2d3(params[:hostname]).to_json
+    unless params[:port] == "all"
+      params[:port].split(',').each { |port| port_filter << port }
+    end
+    q.ports2d3(params[:hostname], port_filter).to_json
   end
 
 end

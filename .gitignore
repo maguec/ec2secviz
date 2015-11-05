@@ -1,5 +1,8 @@
 .rvmrc
 Gemfile.lock
 conf/ec2_credentials.yml
+conf/*.old
+conf/*.bkup
+conf/*.BKUP
 cache
 cache/*

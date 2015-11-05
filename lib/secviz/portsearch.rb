@@ -5,6 +5,24 @@ module Secviz
     require 'ostruct'
     require 'pp'
 
+    def port_in_acl?(port, acl_info)
+    #takes 80, all/udp and lets you know
+      result = false
+      acl_port, acl_proto = acl_info.split "/"
+      if acl_port =~ /^\d{1,5}$/
+        if acl_port.to_i == port.to_i
+          result = true
+        end
+      elsif acl_port == "all"
+          result = true
+      elsif acl_port =~ /^(\d{1,5})\-(\d{1,5})$/
+        if port.to_i >= $1.to_i and port.to_i <= $2.to_i
+          result = true
+        end
+      end
+      result  
+    end
+
     def list_open_ports_by_host(hostname)
       open_conns = {}
       cache = Secviz::Cache.new
@@ -65,8 +83,10 @@ module Secviz
       portslist = { "nodes" => [{"name" => hostname, "group" => 3}], 
                   "links" => []
                 }
+      p port_filter
       self.list_open_ports_by_host(hostname).each do |port, hosts|
-        if port_filter.length == 0 or port_filter.member?port
+        #TODO: hardcoded 0 there, probably not a good idea
+        if port_filter.length == 0 or  self.port_in_acl?(port_filter[0], port)
           portslist["nodes"] << {"name" => port, "group" => 1}
           port_in_nodes = portslist["nodes"].length - 1
           portslist["links"] << {"source" => port_in_nodes, "target"=>0, "value"=>1}
